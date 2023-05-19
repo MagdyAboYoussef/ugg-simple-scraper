@@ -10,22 +10,19 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class opgg {
     Map<String, Map<String, String>> nameServer;
     EdgeDriver driver;
     JavascriptExecutor js;
-    Map<String, Map<String, Integer>> championWinLoss = new HashMap<>();
+    Map<String, Map<String, Integer>> championWinLoss;
     Workbook workbook;
     Sheet sheet;
     int currentRow;
@@ -36,6 +33,24 @@ public class opgg {
         this.headless = headless;
         this.update = selected;
         this.ranked = ranked;
+
+        setUpWebDriver();
+        createExcelSheet();
+
+        for (Map.Entry<String, Map<String, String>> entry : nameServer.entrySet()) {
+            String key = entry.getKey();
+            Map<String, String> value = entry.getValue();
+            String name = key;
+            String server = value.get("server");
+            String role = value.get("role");
+            Map<String, Map<String, Integer>> excelStats = getStats(name, server, role, update, ranked);
+        }
+
+        writeExcelFile(excel);
+        closeResources();
+    }
+
+    private void setUpWebDriver() {
         if (headless) {
             WebDriverManager.edgedriver().setup();
             EdgeOptions chromeOptions = new EdgeOptions();
@@ -50,6 +65,9 @@ public class opgg {
         }
 
         js = (JavascriptExecutor) driver;
+    }
+
+    private void createExcelSheet() {
         workbook = new XSSFWorkbook();
         sheet = workbook.createSheet("Champion Stats");
 
@@ -62,24 +80,17 @@ public class opgg {
         headerRow.createCell(4).setCellValue("Win ratio");
 
         currentRow = 1;
+    }
 
-
-        for (Map.Entry<String, Map<String, String>> entry : nameServer.entrySet()) {
-            String key = entry.getKey();
-            Map<String, String> value = entry.getValue();
-            String name = key;
-            String server = value.get("server");
-            String role = value.get("role");
-            Map<String, Map<String, Integer>> excelStats = getstats(name, server, role, update, ranked);
-        }
-
-
+    private void writeExcelFile(String excel) {
         try (FileOutputStream fileOut = new FileOutputStream(excel + ".xlsx")) {
             workbook.write(fileOut);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    private void closeResources() {
         // Close the workbook and driver
         try {
             driver.close();
@@ -89,46 +100,48 @@ public class opgg {
         }
     }
 
-    public Map<String, Map<String, Integer>> getstats(String name, String server, String role, boolean update, boolean ranked) {
+    public Map<String, Map<String, Integer>> getStats(String name, String server, String role, boolean update, boolean ranked) {
+        goToProfilePage(name, server, update);
+
+        selectRankedModeIfNecessary(ranked);
+        List<WebElement> matches = getAllMatches();
+
+        championWinLoss = processMatches(matches);
+
+        int total = updateExcelSheet(name, role);
+
+        addExtraRows(total);
+
+        // Resize all columns to fit the content size
+        for (int i = 0; i < 6; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        return championWinLoss;
+    }
+
+    private void goToProfilePage(String name, String server, boolean update) {
         driver.get("https://u.gg/lol/profile/" + server + "/" + name + "/overview");
         if (update) {
             driver.findElement(By.className("update-button")).click();
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            sleep(5000);
             driver.get("https://u.gg/lol/profile/" + server + "/" + name + "/overview");
-
         }
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        WebElement element;
+    }
+
+    private void selectRankedModeIfNecessary(boolean ranked) {
         if (ranked) {
-            try {
-                Thread.sleep(1500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            element = driver.findElement(By.cssSelector(".default-select__value-container.default-select__value-container--has-value.css-1kuy7z7"));
+            sleep(1500);
+            WebElement element = driver.findElement(By.cssSelector(".default-select__value-container.default-select__value-container--has-value.css-1kuy7z7"));
             element.click();
-
-            try {
-                Thread.sleep(1500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            // Find and click the option with text "Ranked Solo"
+            sleep(1500);
             WebElement option = driver.findElement(By.xpath("//div[@class='default-select__option css-1kuy7z7' and contains(text(), 'Ranked Solo')]"));
-
             option.click();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            sleep(1000);
         }
+    }
 
-
+    private List<WebElement> getAllMatches() {
         List<WebElement> matches = driver.findElements(By.className("match-history_match-card"));
         int y = 0;
         while (matches.size() < 50) {
@@ -143,19 +156,19 @@ public class opgg {
             if (y >= 300) {
                 break;
             }
-
         }
+        return matches;
+    }
 
-        championWinLoss = new HashMap<>();
+    private Map<String, Map<String, Integer>> processMatches(List<WebElement> matches) {
+        Map<String, Map<String, Integer>> championWinLoss = new HashMap<>();
         int x = 0;
-
         for (int i = 0; i < matches.size(); i++) {
             if (x > 50) {
                 break;
             }
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", matches.get(i));
-            element = matches.get(i).findElement(By.className("large-match-card-container"));
-
+            WebElement element = matches.get(i).findElement(By.className("large-match-card-container"));
             String classAttribute = element.getAttribute("class");
             element = element.findElement(By.className("match-summary_desktop"));
 
@@ -163,34 +176,42 @@ public class opgg {
             String championName = imgElement.getAttribute("alt");
             System.out.println(i + " " + classAttribute + " " + championName);
 
-
-            // Check if the champion is already in the map
-            if (championWinLoss.containsKey(championName)) {
-                Map<String, Integer> winLossMap = championWinLoss.get(championName);
-
-                // Check the class attribute to determine win or loss
-                if (classAttribute.contains("match_win")) {
-                    int wins = winLossMap.getOrDefault("Wins", 0);
-                    winLossMap.put("Wins", wins + 1);
-                } else if (classAttribute.contains("match_lose")) {
-                    int losses = winLossMap.getOrDefault("Losses", 0);
-                    winLossMap.put("Losses", losses + 1);
-                }
-            } else {
-                // Create a new entry in the map for the champion
-                Map<String, Integer> winLossMap = new HashMap<>();
-                if (classAttribute.contains("match_win")) {
-                    winLossMap.put("Wins", 1);
-                    winLossMap.put("Losses", 0);
-                } else if (classAttribute.contains("match_lose")) {
-                    winLossMap.put("Wins", 0);
-                    winLossMap.put("Losses", 1);
-                }
-
-                championWinLoss.put(championName, winLossMap);
-            }
+            championWinLoss = updateChampionStats(championWinLoss, classAttribute, championName);
             x += 1;
         }
+        return championWinLoss;
+    }
+
+    private Map<String, Map<String, Integer>> updateChampionStats(Map<String, Map<String, Integer>> championWinLoss, String classAttribute, String championName) {
+        // Check if the champion is already in the map
+        if (championWinLoss.containsKey(championName)) {
+            Map<String, Integer> winLossMap = championWinLoss.get(championName);
+
+            // Check the class attribute to determine win or loss
+            if (classAttribute.contains("match_win")) {
+                int wins = winLossMap.getOrDefault("Wins", 0);
+                winLossMap.put("Wins", wins + 1);
+            } else if (classAttribute.contains("match_lose")) {
+                int losses = winLossMap.getOrDefault("Losses", 0);
+                winLossMap.put("Losses", losses + 1);
+            }
+        } else {
+            // Create a new entry in the map for the champion
+            Map<String, Integer> winLossMap = new HashMap<>();
+            if (classAttribute.contains("match_win")) {
+                winLossMap.put("Wins", 1);
+                winLossMap.put("Losses", 0);
+            } else if (classAttribute.contains("match_lose")) {
+                winLossMap.put("Wins", 0);
+                winLossMap.put("Losses", 1);
+            }
+
+            championWinLoss.put(championName, winLossMap);
+        }
+        return championWinLoss;
+    }
+
+    private int updateExcelSheet(String name, String role) {
         int total = 0;
         for (Map.Entry<String, Map<String, Integer>> entry : championWinLoss.entrySet()) {
             if (entry.getValue().get("Wins") != null && entry.getValue().get("Losses") != null) {
@@ -208,20 +229,21 @@ public class opgg {
                 row.createCell(5).setCellValue((int) (wins + losses) + " Games");
             }
         }
+        return total;
+    }
+
+    private void addExtraRows(int total) {
         Row row = sheet.createRow(currentRow++);
         row.createCell(5).setCellValue("Total games: " + total);
         row = sheet.createRow(currentRow++);
         row = sheet.createRow(currentRow++);
-
-        // Resize all columns to fit the content size
-        for (int i = 0; i < 6; i++) {
-            sheet.autoSizeColumn(i);
-        }
-        return championWinLoss;
     }
 
-
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
-
-
-

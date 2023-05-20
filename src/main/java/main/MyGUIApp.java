@@ -38,8 +38,8 @@ public class MyGUIApp extends JFrame {
         addButton = new JButton("+");
         addButton.addActionListener(e -> {
             JTextField newInputField = new JTextField(10);
-            JComboBox<String> newComboBox = new JComboBox<>(new DefaultComboBoxModel<>(new String[]{"EUW1", "NA", "EUNE"}));
-            JComboBox<String> role = new JComboBox<>(new DefaultComboBoxModel<>(new String[]{"SUPPORT", "TOP", "MID","JUNGLE","ADC"}));
+            JComboBox<String> newComboBox = new JComboBox<>(new DefaultComboBoxModel<>(new String[]{"EUW1","KR", "NA", "EUNE"}));
+            JComboBox<String> role = new JComboBox<>(new DefaultComboBoxModel<>(new String[]{"NONE","SUPPORT", "TOP", "MID","JUNGLE","ADC"}));
 
             InputFieldCombo combo = new InputFieldCombo(newInputField, newComboBox,role);
             inputFields.add(combo);
@@ -63,7 +63,7 @@ public class MyGUIApp extends JFrame {
                     Map<String, String> innerMap = new HashMap<>();
                     innerMap.put("server", server);
                     innerMap.put("role", role);
-                    values.put(name, innerMap);
+                    values.put(getLastWord(name), innerMap);
                 }
                 String excelValue = excel.getText();
                 ugg page = new ugg(values,excelValue,headless.isSelected(),update.isSelected(),ranked.isSelected());
@@ -153,5 +153,19 @@ public class MyGUIApp extends JFrame {
         public JComboBox<String> getRoleComboBox() {
             return roleComboBox;
         }
+    }
+
+    public static String getLastWord(String inputString) {
+        if (inputString.startsWith("https://www.op.gg/")) {
+            // Remove the URL prefix
+            String[] urlParts = inputString.split("/");
+            System.out.println(urlParts);
+            inputString = urlParts[urlParts.length-1];
+        }
+
+        // Replace '%20' with spaces
+        inputString = inputString.replace("%20", " ");
+
+        return inputString;
     }
 }

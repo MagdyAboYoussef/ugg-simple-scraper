@@ -27,6 +27,8 @@ public class ugg {
     Sheet sheet;
     int currentRow;
     boolean headless, update, ranked;
+    DecimalFormat decimalFormat = new DecimalFormat("0.00");
+
 
     ugg(Map<String, Map<String, String>> nameServer, String excel, boolean headless, boolean selected, boolean ranked) {
         this.nameServer = nameServer;
@@ -108,7 +110,7 @@ public class ugg {
 
         championWinLoss = processMatches(matches);
 
-        int total = updateExcelSheet(name, role);
+        int[] total = updateExcelSheet(name, role);
 
         addExtraRows(total);
 
@@ -211,12 +213,16 @@ public class ugg {
         return championWinLoss;
     }
 
-    private int updateExcelSheet(String name, String role) {
+    private int[] updateExcelSheet(String name, String role) {
         int total = 0;
+        int TotalWins = 0;
+        int Totalloses = 0;
         for (Map.Entry<String, Map<String, Integer>> entry : championWinLoss.entrySet()) {
             if (entry.getValue().get("Wins") != null && entry.getValue().get("Losses") != null) {
                 double wins = entry.getValue().get("Wins");
                 double losses = entry.getValue().get("Losses");
+                TotalWins += (int) wins;
+                Totalloses += (int) losses;
                 total += (int) (wins + losses);
                 Row row = sheet.createRow(currentRow++);
                 row.createCell(0).setCellValue(name + "[" + role + "]");
@@ -224,12 +230,36 @@ public class ugg {
                 row.createCell(2).setCellValue(wins);
                 row.createCell(3).setCellValue(losses);
                 DecimalFormat decimalFormat = new DecimalFormat("0.00");
-
                 row.createCell(4).setCellValue(decimalFormat.format(((wins / (losses + wins)) * 100)) + "%");
                 row.createCell(5).setCellValue((int) (wins + losses) + " Games");
             }
         }
-        return total;
+        return new int[]{total, TotalWins, Totalloses};
+    }
+
+    private void addExtraRows(int[] total) {
+        try {
+            Row row = sheet.createRow(currentRow++);
+            js.executeScript("window.scrollTo(0, 0)");
+            WebElement parent_element = driver.findElement(By.className("rank-text"));
+            WebElement wr_parent = driver.findElement(By.className("rank-wins"));
+            WebElement wr_total = wr_parent.findElement(By.cssSelector("span:nth-child(2)"));
+
+            row.createCell(0).setCellValue(parent_element.findElement(By.cssSelector("span:nth-child(1)")).getText());
+            row.createCell(1).setCellValue(parent_element.findElement(By.cssSelector("span:nth-child(2)")).getText());
+            row.createCell(2).setCellValue(driver.findElement(By.className("total-games")).getText());
+            row.createCell(3).setCellValue(wr_total.getText());
+            row.createCell(5).setCellValue("Last " + total[0] + " Games");
+            row.createCell(6).setCellValue("Wins: " + total[1]);
+            row.createCell(7).setCellValue("Losses: " + total[2]);
+            row.createCell(8).setCellValue(decimalFormat.format(((double) total[1] / total[0]) * 100) + "%");
+
+
+            row = sheet.createRow(currentRow++);
+            row = sheet.createRow(currentRow++);
+        } catch (Exception e) {
+
+        }
     }
 
     private void addExtraRows(int total) {

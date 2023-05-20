@@ -2,6 +2,8 @@ package main;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,23 +54,45 @@ public class MyGUIApp extends JFrame {
 
         submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            values = new HashMap<>();
-            for (InputFieldCombo combo : inputFields) {
-                String name = combo.getInputField().getText();
-                String server = (String) combo.getComboBox().getSelectedItem();
-                String role = (String) combo.getRoleComboBox().getSelectedItem();
-                Map<String, String> innerMap = new HashMap<>();
-                innerMap.put("server", server);
-                innerMap.put("role", role);
-                values.put(name, innerMap);
+            try {
+                values = new HashMap<>();
+                for (InputFieldCombo combo : inputFields) {
+                    String name = combo.getInputField().getText();
+                    String server = (String) combo.getComboBox().getSelectedItem();
+                    String role = (String) combo.getRoleComboBox().getSelectedItem();
+                    Map<String, String> innerMap = new HashMap<>();
+                    innerMap.put("server", server);
+                    innerMap.put("role", role);
+                    values.put(name, innerMap);
+                }
+                String excelValue = excel.getText();
+                ugg page = new ugg(values,excelValue,headless.isSelected(),update.isSelected(),ranked.isSelected());
+
+                // Success message
+                JOptionPane.showMessageDialog(this, "Success!", "Operation Successful", JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (Exception exception) {
+                // Convert the stack trace to a String
+                StringWriter errors = new StringWriter();
+                exception.printStackTrace(new PrintWriter(errors));
+
+                // Create a JTextArea to contain the error
+                JTextArea textArea = new JTextArea(errors.toString());
+                textArea.setEditable(false);
+                textArea.setLineWrap(true);
+                textArea.setWrapStyleWord(true);
+
+                // Create a JScrollPane to contain the JTextArea
+                JScrollPane scrollPane = new JScrollPane(textArea);
+                scrollPane.setPreferredSize(new Dimension(350, 150));
+                scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+                JOptionPane.showMessageDialog(this, scrollPane, "Error", JOptionPane.ERROR_MESSAGE);
             }
-            String excelValue = excel.getText();
-            opgg page = new opgg(values,excelValue,headless.isSelected(),update.isSelected(),ranked.isSelected());
-
-
-
-            System.exit(1);
         });
+
+
 
         JButton removeButton = new JButton("-");
         removeButton.addActionListener(e -> {

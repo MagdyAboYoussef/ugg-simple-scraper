@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class opgg {
+public class ugg {
     Map<String, Map<String, String>> nameServer;
     EdgeDriver driver;
     JavascriptExecutor js;
@@ -28,7 +28,7 @@ public class opgg {
     int currentRow;
     boolean headless, update, ranked;
 
-    opgg(Map<String, Map<String, String>> nameServer, String excel, boolean headless, boolean selected, boolean ranked) {
+    ugg(Map<String, Map<String, String>> nameServer, String excel, boolean headless, boolean selected, boolean ranked) {
         this.nameServer = nameServer;
         this.headless = headless;
         this.update = selected;

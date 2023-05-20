@@ -63,7 +63,7 @@ public class MyGUIApp extends JFrame {
                 values.put(name, innerMap);
             }
             String excelValue = excel.getText();
-            opgg page = new opgg(values,excelValue,headless.isSelected(),update.isSelected(),ranked.isSelected());
+            ugg page = new ugg(values,excelValue,headless.isSelected(),update.isSelected(),ranked.isSelected());
 
 
 

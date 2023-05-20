@@ -149,13 +149,13 @@ public class ugg {
 
     private void selectRankedModeIfNecessary(boolean ranked) {
         if (ranked) {
-            sleep(1500);
+            sleep(2000);
             WebElement element = driver.findElement(By.cssSelector(".default-select__value-container.default-select__value-container--has-value.css-1kuy7z7"));
             element.click();
-            sleep(1500);
+            sleep(1250);
             WebElement option = driver.findElement(By.xpath("//div[@class='default-select__option css-1kuy7z7' and contains(text(), 'Ranked Solo')]"));
             option.click();
-            sleep(1000);
+            sleep(1250);
         }
     }
 

@@ -229,6 +229,7 @@ public class ugg {
                 row.createCell(1).setCellValue(entry.getKey());
                 row.createCell(2).setCellValue(wins);
                 row.createCell(3).setCellValue(losses);
+                DecimalFormat decimalFormat = new DecimalFormat("0.00");
                 row.createCell(4).setCellValue(decimalFormat.format(((wins / (losses + wins)) * 100)) + "%");
                 row.createCell(5).setCellValue((int) (wins + losses) + " Games");
             }
@@ -251,14 +252,21 @@ public class ugg {
             row.createCell(5).setCellValue("Last " + total[0] + " Games");
             row.createCell(6).setCellValue("Wins: " + total[1]);
             row.createCell(7).setCellValue("Losses: " + total[2]);
-            row.createCell(8).setCellValue( decimalFormat.format(((double) total[1] / total[0]) * 100)+"%");
+            row.createCell(8).setCellValue(decimalFormat.format(((double) total[1] / total[0]) * 100) + "%");
 
 
             row = sheet.createRow(currentRow++);
             row = sheet.createRow(currentRow++);
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
+    }
+
+    private void addExtraRows(int total) {
+        Row row = sheet.createRow(currentRow++);
+        row.createCell(5).setCellValue("Total games: " + total);
+        row = sheet.createRow(currentRow++);
+        row = sheet.createRow(currentRow++);
     }
 
     private void sleep(int millis) {

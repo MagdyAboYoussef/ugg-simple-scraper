@@ -1,45 +1,45 @@
 Manifest-Version: 1.0
 Main-Class: main.Main
-Class-Path: opentelemetry-exporter-logging-1.25.0.jar dec-0.1.2.jar nett
- y-handler-proxy-4.1.60.Final.jar jcommander-1.82.jar commons-exec-1.3.j
- ar commons-io-2.6.jar netty-buffer-4.1.91.Final.jar opentelemetry-conte
- xt-1.25.0.jar netty-codec-socks-4.1.60.Final.jar bcpkix-jdk15on-1.64.ja
- r selenium-ie-driver-4.9.0.jar netty-transport-native-kqueue-4.1.60.Fin
- al-osx-x86_64.jar netty-transport-native-kqueue-4.1.91.Final.jar netty-
- transport-native-epoll-4.1.60.Final-linux-x86_64.jar gson-2.10.1.jar ne
- tty-transport-4.1.91.Final.jar netty-reactive-streams-2.0.4.jar netty-t
- ransport-native-unix-common-4.1.91.Final.jar failsafe-3.3.1.jar netty-c
- odec-http-4.1.91.Final.jar opentelemetry-sdk-logs-1.25.0-alpha.jar sele
- nium-devtools-v85-4.9.0.jar opentelemetry-api-events-1.25.0-alpha.jar a
- sync-http-client-2.12.3.jar jackson-core-2.10.3.jar selenium-devtools-v
- 111-4.9.0.jar netty-common-4.1.91.Final.jar opentelemetry-sdk-extension
- -autoconfigure-spi-1.25.0.jar byte-buddy-1.14.4.jar webdrivermanager-5.
- 3.2.jar opentelemetry-sdk-common-1.25.0.jar selenium-java-4.9.0.jar sel
- enium-remote-driver-4.9.0.jar poi-ooxml-schemas-3.17.jar selenium-devto
- ols-v112-4.9.0.jar selenium-edge-driver-4.9.0.jar selenium-api-4.9.0.ja
- r reactive-streams-1.0.3.jar selenium-chromium-driver-4.9.0.jar async-h
- ttp-client-netty-utils-2.12.3.jar httpcore5-h2-5.2.jar slf4j-api-2.0.6.
- jar xmlbeans-2.6.0.jar j2objc-annotations-1.3.jar error_prone_annotatio
- ns-2.11.0.jar opentelemetry-semconv-1.25.0-alpha.jar guava-31.1-jre.jar
-  selenium-json-4.9.0.jar netty-resolver-4.1.91.Final.jar selenium-http-
- 4.9.0.jar stax-api-1.0.1.jar jsr305-3.0.2.jar opentelemetry-sdk-extensi
- on-autoconfigure-1.25.0-alpha.jar opentelemetry-sdk-metrics-1.25.0.jar 
- httpcore5-5.2.jar listenablefuture-9999.0-empty-to-avoid-conflict-with-
- guava.jar jakarta.activation-1.2.2.jar jackson-annotations-2.10.3.jar s
- elenium-firefox-driver-4.9.0.jar auto-common-1.2.jar selenium-manager-4
- .9.0.jar selenium-support-4.9.0.jar poi-ooxml-3.17.jar poi-3.17.jar htt
- pclient5-5.2.1.jar selenium-safari-driver-4.9.0.jar netty-transport-nat
- ive-epoll-4.1.91.Final.jar commons-codec-1.10.jar jcl-over-slf4j-1.7.30
- .jar docker-java-transport-httpclient5-3.2.14.jar selenium-devtools-v11
- 0-4.9.0.jar netty-codec-4.1.91.Final.jar jtoml-2.0.0.jar selenium-chrom
- e-driver-4.9.0.jar opentelemetry-sdk-trace-1.25.0.jar curvesapi-1.04.ja
- r jackson-databind-2.10.3.jar auto-service-annotations-1.0.1.jar netty-
- transport-classes-kqueue-4.1.91.Final.jar checker-qual-3.12.0.jar jna-5
- .12.1.jar commons-collections4-4.1.jar opentelemetry-api-1.25.0.jar doc
- ker-java-3.2.14.jar commons-lang3-3.12.0.jar docker-java-transport-3.2.
- 14.jar opentelemetry-api-logs-1.25.0-alpha.jar failureaccess-1.0.1.jar 
- netty-transport-classes-epoll-4.1.91.Final.jar auto-service-1.0.1.jar n
- etty-handler-4.1.91.Final.jar commons-compress-1.21.jar bcprov-jdk15on-
- 1.64.jar docker-java-api-3.2.14.jar opentelemetry-sdk-1.25.0.jar docker
- -java-core-3.2.14.jar
+Class-Path: selenium-firefox-driver-4.9.0.jar netty-buffer-4.1.91.Final.
+ jar bcprov-jdk15on-1.64.jar selenium-json-4.9.0.jar jsr305-3.0.2.jar se
+ lenium-remote-driver-4.9.0.jar opentelemetry-sdk-extension-autoconfigur
+ e-1.25.0-alpha.jar opentelemetry-sdk-1.25.0.jar netty-reactive-streams-
+ 2.0.4.jar netty-resolver-4.1.91.Final.jar byte-buddy-1.14.4.jar seleniu
+ m-java-4.9.0.jar opentelemetry-sdk-trace-1.25.0.jar jackson-annotations
+ -2.10.3.jar selenium-chrome-driver-4.9.0.jar netty-transport-native-kqu
+ eue-4.1.60.Final-osx-x86_64.jar dec-0.1.2.jar poi-ooxml-schemas-3.17.ja
+ r auto-service-1.0.1.jar commons-lang3-3.12.0.jar docker-java-transport
+ -3.2.14.jar netty-transport-native-unix-common-4.1.91.Final.jar seleniu
+ m-api-4.9.0.jar opentelemetry-sdk-extension-autoconfigure-spi-1.25.0.ja
+ r selenium-support-4.9.0.jar checker-qual-3.12.0.jar jackson-databind-2
+ .10.3.jar netty-transport-native-epoll-4.1.60.Final-linux-x86_64.jar se
+ lenium-edge-driver-4.9.0.jar netty-transport-native-kqueue-4.1.91.Final
+ .jar netty-transport-classes-epoll-4.1.91.Final.jar opentelemetry-api-l
+ ogs-1.25.0-alpha.jar jcommander-1.82.jar jtoml-2.0.0.jar async-http-cli
+ ent-netty-utils-2.12.3.jar xmlbeans-2.6.0.jar opentelemetry-sdk-metrics
+ -1.25.0.jar opentelemetry-semconv-1.25.0-alpha.jar docker-java-3.2.14.j
+ ar httpcore5-h2-5.2.jar opentelemetry-api-events-1.25.0-alpha.jar commo
+ ns-io-2.6.jar auto-service-annotations-1.0.1.jar netty-handler-4.1.91.F
+ inal.jar netty-transport-native-epoll-4.1.91.Final.jar commons-collecti
+ ons4-4.1.jar stax-api-1.0.1.jar selenium-devtools-v112-4.9.0.jar jna-5.
+ 12.1.jar guava-31.1-jre.jar netty-codec-4.1.91.Final.jar webdrivermanag
+ er-5.3.2.jar commons-compress-1.21.jar netty-transport-4.1.91.Final.jar
+  slf4j-api-2.0.6.jar bcpkix-jdk15on-1.64.jar netty-transport-classes-kq
+ ueue-4.1.91.Final.jar auto-common-1.2.jar opentelemetry-sdk-common-1.25
+ .0.jar commons-exec-1.3.jar opentelemetry-api-1.25.0.jar gson-2.10.1.ja
+ r failureaccess-1.0.1.jar selenium-safari-driver-4.9.0.jar netty-codec-
+ socks-4.1.60.Final.jar reactive-streams-1.0.3.jar opentelemetry-sdk-log
+ s-1.25.0-alpha.jar failsafe-3.3.1.jar jcl-over-slf4j-1.7.30.jar poi-oox
+ ml-3.17.jar selenium-ie-driver-4.9.0.jar selenium-manager-4.9.0.jar doc
+ ker-java-core-3.2.14.jar opentelemetry-exporter-logging-1.25.0.jar http
+ core5-5.2.jar j2objc-annotations-1.3.jar selenium-devtools-v85-4.9.0.ja
+ r selenium-devtools-v110-4.9.0.jar httpclient5-5.2.1.jar selenium-http-
+ 4.9.0.jar opentelemetry-context-1.25.0.jar netty-codec-http-4.1.91.Fina
+ l.jar error_prone_annotations-2.11.0.jar selenium-chromium-driver-4.9.0
+ .jar jakarta.activation-1.2.2.jar netty-common-4.1.91.Final.jar jackson
+ -core-2.10.3.jar poi-3.17.jar netty-handler-proxy-4.1.60.Final.jar curv
+ esapi-1.04.jar async-http-client-2.12.3.jar docker-java-api-3.2.14.jar 
+ listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar commons-
+ codec-1.10.jar docker-java-transport-httpclient5-3.2.14.jar selenium-de
+ vtools-v111-4.9.0.jar
 

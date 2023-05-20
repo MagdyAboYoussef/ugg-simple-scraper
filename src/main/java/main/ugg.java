@@ -1,9 +1,7 @@
 package main;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -28,6 +26,7 @@ public class ugg {
     int currentRow;
     boolean headless, update, ranked;
     DecimalFormat decimalFormat = new DecimalFormat("0.00");
+    CellStyle style;
 
 
     ugg(Map<String, Map<String, String>> nameServer, String excel, boolean headless, boolean selected, boolean ranked) {
@@ -72,14 +71,29 @@ public class ugg {
     private void createExcelSheet() {
         workbook = new XSSFWorkbook();
         sheet = workbook.createSheet("Champion Stats");
+        style = workbook.createCellStyle();
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setWrapText(true);
 
         // Create header row
         Row headerRow = sheet.createRow(0);
         headerRow.createCell(0).setCellValue("Summoner name");
+        headerRow.getCell(0).setCellStyle(style);
+
         headerRow.createCell(1).setCellValue("Champion Name");
+        headerRow.getCell(1).setCellStyle(style);
+
         headerRow.createCell(2).setCellValue("Wins");
+        headerRow.getCell(2).setCellStyle(style);
+
         headerRow.createCell(3).setCellValue("Losses");
+        headerRow.getCell(3).setCellStyle(style);
+
         headerRow.createCell(4).setCellValue("Win ratio");
+        headerRow.getCell(4).setCellStyle(style);
+
+        headerRow.createCell(4).setCellValue("Games");
+        headerRow.getCell(4).setCellStyle(style);
 
         currentRow = 1;
     }
@@ -225,13 +239,33 @@ public class ugg {
                 Totalloses += (int) losses;
                 total += (int) (wins + losses);
                 Row row = sheet.createRow(currentRow++);
-                row.createCell(0).setCellValue(name + "[" + role + "]");
+                if (role!="NONE"){
+                    row.createCell(0).setCellValue(name + "[" + role + "]");
+                }else{
+                    row.createCell(0).setCellValue(name);
+                }
+                row.getCell(0).setCellStyle(style);
+
                 row.createCell(1).setCellValue(entry.getKey());
+                row.getCell(1).setCellStyle(style);
+
                 row.createCell(2).setCellValue(wins);
+                row.getCell(2).setCellStyle(style);
+
                 row.createCell(3).setCellValue(losses);
+                row.getCell(3).setCellStyle(style);
+
                 DecimalFormat decimalFormat = new DecimalFormat("0.00");
-                row.createCell(4).setCellValue(decimalFormat.format(((wins / (losses + wins)) * 100)) + "%");
-                row.createCell(5).setCellValue((int) (wins + losses) + " Games");
+
+                CellStyle percentStyle = workbook.createCellStyle();
+                percentStyle.setDataFormat(workbook.createDataFormat().getFormat("0.00%"));
+
+                row.createCell(4).setCellValue(wins / (losses + wins));
+                row.getCell(4).setCellStyle(percentStyle);
+
+                row.createCell(5).setCellValue((int) (wins + losses));
+                row.getCell(5).setCellStyle(style);
+
             }
         }
         return new int[]{total, TotalWins, Totalloses};
@@ -248,11 +282,23 @@ public class ugg {
             row.createCell(0).setCellValue(parent_element.findElement(By.cssSelector("span:nth-child(1)")).getText());
             row.createCell(1).setCellValue(parent_element.findElement(By.cssSelector("span:nth-child(2)")).getText());
             row.createCell(2).setCellValue(driver.findElement(By.className("total-games")).getText());
+            row.getCell(2).setCellStyle(style);
+
             row.createCell(3).setCellValue(wr_total.getText());
+            row.getCell(3).setCellStyle(style);
+
             row.createCell(5).setCellValue("Last " + total[0] + " Games");
-            row.createCell(6).setCellValue("Wins: " + total[1]);
-            row.createCell(7).setCellValue("Losses: " + total[2]);
+            row.getCell(5).setCellStyle(style);
+
+            row.createCell(6).setCellValue("W : " + total[1]);
+            row.getCell(6).setCellStyle(style);
+
+            row.createCell(7).setCellValue("L : " + total[2]);
+            row.getCell(7).setCellStyle(style);
+
             row.createCell(8).setCellValue(decimalFormat.format(((double) total[1] / total[0]) * 100) + "%");
+            row.getCell(8).setCellStyle(style);
+
 
 
             row = sheet.createRow(currentRow++);

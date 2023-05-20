@@ -55,6 +55,8 @@ public class ugg {
         if (headless) {
             WebDriverManager.edgedriver().setup();
             EdgeOptions chromeOptions = new EdgeOptions();
+            chromeOptions.addArguments("--window-size=1920,1080");
+            chromeOptions.addArguments("--start-maximized");
             chromeOptions.addArguments("--no-sandbox");
             chromeOptions.addArguments("--headless");
             chromeOptions.addArguments("disable-gpu");
